@@ -1,0 +1,23 @@
+{
+    "name": "docteurklein/test-double-bundle",
+    "description": "Easily create test doubles using symfony DIC",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Klein Florian",
+            "email": "florian.klein@free.fr"
+        }
+    ],
+    "require": {
+        "php": ">=5.4",
+        "symfony/http-kernel": "^2.0|^3.0",
+        "symfony/dependency-injection": "^2.0|^3.0",
+        "phpspec/prophecy": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "DocteurKlein\\": ""
+        }
+    }
+}
