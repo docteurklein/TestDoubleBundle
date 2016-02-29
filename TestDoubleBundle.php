@@ -6,7 +6,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Prophecy\Prophet;
+use Symfony\Component\DependencyInjection\Reference;
 
 final class TestDoubleBundle extends Bundle implements CompilerPassInterface
 {
@@ -41,18 +41,27 @@ final class TestDoubleBundle extends Bundle implements CompilerPassInterface
                 }
             }
         }
-        $container->setDefinition('stub.prophet', (new Definition)->setSynthetic(true));
         $container->setParameter('stub.services', $ids);
+        $doubler = new Definition('Prophecy\Doubler\Doubler');
+        $prophet = new Definition('Prophecy\Prophet', [$doubler]);
+        foreach (['SplFileInfoPatch', 'TraversablePatch', 'DisableConstructorPatch', 'ProphecySubjectPatch', 'ReflectionClassNewInstancePatch', 'HhvmExceptionPatch', 'MagicCallPatch', 'KeywordPatch'] as $class) {
+            $doubler->addMethodCall('registerClassPatch', [new Definition('Prophecy\Doubler\ClassPatch\\'.$class)]);
+        }
+        foreach ($container->findTaggedServiceIds('test_double.prophet.class_patch') as $id => $configs) {
+            foreach ($configs as $config) {
+                $doubler->addMethodCall('registerClassPatch', [new Reference($id)]);
+            }
+        }
+        $container->setDefinition('stub.prophet', $prophet);
     }
 
     public function boot()
     {
-        $prophet = new Prophet;
+        $prophet = $this->container->get('stub.prophet');
         foreach ($this->container->getParameter('stub.services') as $id => $class) {
             $prophecy = $prophet->prophesize($class);
             $this->container->set("$id.prophecy", $prophecy);
             $this->container->set("$id.stub", $prophecy->reveal());
         }
-        $this->container->set('stub.prophet', $prophet);
     }
 }
