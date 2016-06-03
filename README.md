@@ -11,7 +11,7 @@ Using DIC tags, you can automatically replace a service with either a stub or a 
 To improve isolation of tests and increase the precision and variation of test fixtures.
 
 Usually, our behat suite is using real data, coming from database fixtures.  
-This forces us to create gobal, universal, works-for-all fixtures.
+This forces us to create global, universal, works-for-all fixtures.
 
 A real database also implies to reset the state before each scenario.  
 This process is slow, and is just a workaround for having broken isolation.
