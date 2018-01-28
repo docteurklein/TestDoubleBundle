@@ -28,8 +28,8 @@ final class TestDoubleBundle extends Bundle implements CompilerPassInterface
                     $container->setAlias($id, $config['fake']);
                 }
                 else {
-                    $container->setDefinition("$id.prophecy", (new Definition)->setSynthetic(true));
-                    $container->setDefinition("$id.stub", (new Definition)->setSynthetic(true));
+                    $container->setDefinition("$id.prophecy", (new Definition)->setSynthetic(true)->setPublic(true));
+                    $container->setDefinition("$id.stub", (new Definition)->setSynthetic(true)->setPublic(true));
 
                     $container->setAlias($id, "$id.stub");
 
