@@ -41,7 +41,7 @@ final class TestDoubleBundle extends Bundle implements CompilerPassInterface
                 }
             }
         }
-        $container->setDefinition('stub.prophet', (new Definition)->setSynthetic(true));
+        $container->setDefinition('stub.prophet', (new Definition)->setSynthetic(true)->setPrivate(false));
         $container->setParameter('stub.services', $ids);
     }
 
